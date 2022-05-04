@@ -20,6 +20,7 @@ xq = Vq*m_per_V;
 thetaq = Vq*rad_per_V;
 
 Ts = 0.005;
-omega_c = 2*pi*2;
+f_c = 2;
+omega_c = 2*pi*f_c;
 alfa = omega_c*Ts/(1+omega_c*Ts);
 
