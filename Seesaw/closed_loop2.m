@@ -24,3 +24,7 @@ f_c = 2 ;
 omega_c = 2*pi*f_c;
 alfa = omega_c*Ts/(1+omega_c*Ts);
 
+f_c2 = 5;
+omega_c2 = 2*pi*f_c2;
+beta = omega_c2*Ts/(1+omega_c2*Ts);
+

@@ -8,7 +8,7 @@ R = 1; % We change Q relative to R
 
 % State vector x = [x  theta  dx  dtheta]'
 % Q = diag([100 400 0 0]);
-Q = diag([50 300 0 0]);
+Q = diag([50 300 50 50]);
 
 % Try to stay within these limits:
 % |u| < 3.5V (can be increased to 5V)
