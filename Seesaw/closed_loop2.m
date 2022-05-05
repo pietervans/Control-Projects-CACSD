@@ -1,9 +1,24 @@
-closed_loop1;
+main;
 
 % output y equals measured quantities [x; theta]
 I4 = eye(4);
 C = I4(1:2,:);
 D = zeros(2,1);
+
+
+R = 1; % We change Q relative to R
+
+% State vector x = [x  theta  dx  dtheta]'
+% Q = diag([100 400 0 0]);
+Q = diag([100 1200 0 0]);
+
+% used for practicum session 1:
+%Q = diag([400 2400 0 0]);
+
+
+
+K = lqr(A,B,Q,R);
+clp = eig(A-B*K); % Closed loop poles
 
 
 % Measurement noise, in m and rad respectively
@@ -24,7 +39,7 @@ f_c = 2 ;
 omega_c = 2*pi*f_c;
 alfa = omega_c*Ts/(1+omega_c*Ts);
 
-f_c2 = 5;
+f_c2 = 10;
 omega_c2 = 2*pi*f_c2;
 beta = omega_c2*Ts/(1+omega_c2*Ts);
 
