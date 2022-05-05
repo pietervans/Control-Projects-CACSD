@@ -10,9 +10,10 @@ R = 1; % We change Q relative to R
 % Q = diag([100 400 0 0]);
 Q = diag([50 300 50 50]);
 
-% Try to stay within these limits:
-% |u| < 3.5V (can be increased to 5V)
-% |x| < ?  --> what is length of track?
+% used for practicum:
+%Q = diag([400 2400 0 0]);
+
+
 
 
 K = lqr(A,B,Q,R);
