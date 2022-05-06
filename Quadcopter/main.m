@@ -49,11 +49,33 @@ D = zeros(6,4);
 
 sys = ss(A,B,C,D);
 
+
+% DISCRETIZATION
 Ts = 0.05;
-G_d = c2d(sys,Ts,'zoh');
+G_d = c2d(sys,Ts,'tustin');
 Az = G_d.A; Bz = G_d.B; Cz = G_d.C; Dz = G_d.D;
 
-% Full state feedback
-N = [Az-eye(12), Bz; Cz Dz]\[zeros(12,6); eye(6)];
+[ps, zs] = pzmap(G_d); % System is marginally stable
+
+CO = ctrb(Az,Bz);
+rank_OC = rank(CO); % System is controllable
+
+Ob = obsv(Az,Cz);
+rank_Ob = rank(Ob); % System is observable
+
+% System is also stabilizable, since unstable modes are controllable
+% System is also detectable, since unstable modes are observable
+% System is also minimal, since it's controllable and observable
+
+
+
+% LQR CONTROL
+N = [Az-eye(12), Bz; Cz Dz]\[zeros(12,6); eye(6)]; % Least-squares solution
 Nx = N(1:12,:);
 Nu = N(13:end,:);
+
+R = diag([1 1 1 1]); % Tune Q relative to R, 0<u<100
+Q = 100*diag([1 1 1 0 0 0 10 10 1 0 0 0]);
+
+[K, ~, clp] = dlqr(Az,Bz,Q,R);
+
