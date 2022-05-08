@@ -96,8 +96,7 @@ CO = ctrb(Aint, Bint);
 rank_OC = rank(CO); % Augmented system is controllable
 
 Rint = diag([1 1 1 1]); % Tune Q relative to R
-Qint = diag([1e4 1e4 1e2, 0 0 0, 0 0 0, 1e4 1e4 1e2, 0 0 0]);
-%Qint = diag([1e10 1e10 1e5, 0 0 0, 0 0 0, 1e10 1e10 1e7, 0 0 0]);
+Qint = diag([1e2 1e2 1e2, 0 0 0, 0 0 0, 1e5 1e5 1e2, 0 0 0]);
 
 [Kint_all, ~, clp_int] = dlqr(Aint,Bint,Qint,Rint);
 Kint = Kint_all(:,1:3); % Gain for integrated errors
