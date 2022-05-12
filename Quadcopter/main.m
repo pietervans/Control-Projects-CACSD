@@ -68,6 +68,9 @@ rank_Ob = rank(Ob); % System is observable
 % System is also detectable, since unstable modes are observable
 % System is also minimal, since it's controllable and observable
 
+transmission_zeros = tzero(G_d);
+% All of them are approximately -1. This means we can find inputs
+% u=u_0*(-1)^k that vanish
 
 
 % LQR CONTROL, see quadcopter_lqr.slx
@@ -77,7 +80,7 @@ Nx = N(1:12,:);
 Nu = N(13:end,:);
 
 R = diag([1 1 1 1]); % Tune Q relative to R, 0<u<100
-Q = 100*diag([1 1 1 0 0 0 30 30 1 0 0 0]);
+Q = diag([1e2 1e2 1e2 0 0 0 3e3 3e3 1e2 0 0 0]);
 
 [K, ~, clp] = dlqr(Az,Bz,Q,R);
 
@@ -101,3 +104,15 @@ Qint = diag([1e2 1e2 1e2, 0 0 0, 0 0 0, 1e5 1e5 1e2, 0 0 0]);
 [Kint_all, ~, clp_int] = dlqr(Aint,Bint,Qint,Rint);
 Kint = Kint_all(:,1:3); % Gain for integrated errors
 Ks = Kint_all(:,4:end); % Gain for 12D state vector
+
+
+
+% LQG CONTROL
+% -------------------------------------------------------------------------
+R_kalman = diag([2.5e-5 2.5e-5 2.5e-5 7.57e-5 7.57e-5 7.57e-5]);
+sigma_kalman = 1e0; % TODO tune
+Q_kalman = sigma_kalman^2*eye(12);
+
+M_kalman = dlqe(Az, eye(12), Cz, Q_kalman, R_kalman);
+L_kalman = Az*M_kalman;
+
