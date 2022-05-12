@@ -107,7 +107,7 @@ Ks = Kint_all(:,4:end); % Gain for 12D state vector
 
 
 
-% LQG CONTROL
+% LQG CONTROL, see quadcopter_lqg.slx
 % -------------------------------------------------------------------------
 R_kalman = diag([2.5e-5 2.5e-5 2.5e-5 7.57e-5 7.57e-5 7.57e-5]);
 sigma_kalman = 1e0; % TODO tune
@@ -115,4 +115,16 @@ Q_kalman = sigma_kalman^2*eye(12);
 
 M_kalman = dlqe(Az, eye(12), Cz, Q_kalman, R_kalman);
 L_kalman = Az*M_kalman;
+
+
+% POLE PLACEMENT, see quadcopter_pp.slx
+% -------------------------------------------------------------------------
+
+% Real part of last 10 poles: 5-10x real part of first 2 poles
+% NOTE: z = exp(s*Ts)
+poles_cont = [-0.5+1j  -0.5-1j  -3*(ones(1,10))-(1:10)/10];
+Kpp = place(Az, Bz, exp(poles_cont*Ts));
+
+% Estimator poles: 2-5x faster than controller poles
+Lpp = (place(Az', Cz', exp(5*poles_cont*Ts)))';
 
