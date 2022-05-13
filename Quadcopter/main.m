@@ -96,7 +96,7 @@ Cint = [zeros(6,3) Cz];
 Dint = Dz;
 
 CO = ctrb(Aint, Bint);
-rank_OC = rank(CO); % Augmented system is controllable
+rank_OC2 = rank(CO); % Augmented system is controllable
 
 Rint = diag([1 1 1 1]); % Tune Q relative to R
 Qint = diag([1e2 1e2 1e2, 0 0 0, 0 0 0, 1e5 1e5 1e2, 0 0 0]);
