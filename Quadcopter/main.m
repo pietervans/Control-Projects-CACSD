@@ -80,7 +80,7 @@ Nx = N(1:12,:);
 Nu = N(13:end,:);
 
 R = diag([1 1 1 1]); % Tune Q relative to R, 0<u<100
-Q = diag([1e2 1e2 1e2 0 0 0 3e3 3e3 1e2 0 0 0]);
+Q = diag([1e3 1e3 1e3 0 0 0 1e4 1e4 1e2 0 0 0]);
 
 [K, ~, clp] = dlqr(Az,Bz,Q,R);
 
@@ -99,18 +99,15 @@ CO = ctrb(Aint, Bint);
 rank_OC2 = rank(CO); % Augmented system is controllable
 
 Rint = diag([1 1 1 1]); % Tune Q relative to R
-Qint = diag([1e2 1e2 1e2, 0 0 0, 0 0 0, 1e5 1e5 1e2, 0 0 0]);
+Qint = diag([1e3 1e3 1e3, 0 0 0, 0 0 0, 1e6 1e6 1e2, 0 0 0]);
 
 [Kint_all, ~, clp_int] = dlqr(Aint,Bint,Qint,Rint);
-Kint = Kint_all(:,1:3); % Gain for integrated errors
-Ks = Kint_all(:,4:end); % Gain for 12D state vector
-
 
 
 % LQG CONTROL, see quadcopter_lqg.slx
 % -------------------------------------------------------------------------
 R_kalman = diag([2.5e-5 2.5e-5 2.5e-5 7.57e-5 7.57e-5 7.57e-5]);
-sigma_kalman = 1e0; % TODO tune
+sigma_kalman = 1;
 Q_kalman = sigma_kalman^2*eye(12);
 
 M_kalman = dlqe(Az, eye(12), Cz, Q_kalman, R_kalman);
@@ -122,13 +119,14 @@ L_kalman = Az*M_kalman;
 
 % Real part of last 10 poles: 5-10x real part of first 2 poles
 % NOTE: z = exp(s*Ts)
-ts = 6; zeta = 0.97; % we choose poles based on these criteria
-% ts = 6; zeta = 0.97; --> With these, checkpoints reached without crash!
+ts = 7; zeta = 0.92; % we choose poles based on these criteria
+% ts = 7; zeta = 0.92; --> With these, checkpoints reached without crash!
 
 omega_n = 4.6/(zeta*ts);
 real_part = -zeta*omega_n;
 imag_part = omega_n*sqrt(1-zeta^2);
-poles_cont = [real_part+1j*imag_part  real_part-1j*imag_part  8*real_part*(ones(1,10))-(1:10)/10];
+
+poles_cont = [real_part+[1j -1j]*imag_part  10*real_part*(ones(1,10))-(1:10)/10];
 Kpp = place(Az, Bz, exp(poles_cont*Ts));
 
 % Estimator poles: 2-5x faster than controller poles
