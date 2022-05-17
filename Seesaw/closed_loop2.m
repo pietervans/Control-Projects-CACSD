@@ -9,11 +9,13 @@ D = zeros(2,1);
 R = 1; % We change Q relative to R
 
 % State vector x = [x  theta  dx  dtheta]'
-% Q = diag([100 400 0 0]);
-Q = diag([100 1200 0 0]);
 
-% used for practicum session 1:
-%Q = diag([400 2400 0 0]);
+% Default
+Q = diag([100 400 0 0]);
+
+% used for practicum:
+%Q0 = diag([400 2000 0 0]);
+%Q1 = diag([800 5000 0 0]);
 
 
 
