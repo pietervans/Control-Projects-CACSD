@@ -53,7 +53,7 @@ sys = ss(A,B,C,D);
 % DISCRETIZATION
 % -------------------------------------------------------------------------
 Ts = 0.05;
-G_d = c2d(sys,Ts,'tustin');
+G_d = c2d(sys,Ts,'zoh');
 Az = G_d.A; Bz = G_d.B; Cz = G_d.C; Dz = G_d.D;
 
 [ps, zs] = pzmap(G_d); % System is marginally stable
@@ -107,8 +107,9 @@ Qint = diag([1e3 1e3 1e3, 0 0 0, 0 0 0, 1e6 1e6 1e2, 0 0 0]);
 % LQG CONTROL, see quadcopter_lqg.slx
 % -------------------------------------------------------------------------
 R_kalman = diag([2.5e-5 2.5e-5 2.5e-5 7.57e-5 7.57e-5 7.57e-5]);
-sigma_kalman = 1;
+sigma_kalman = 1e-3;
 Q_kalman = sigma_kalman^2*eye(12);
+Q_kalman(6,6) = 1e-3;
 
 M_kalman = dlqe(Az, eye(12), Cz, Q_kalman, R_kalman);
 L_kalman = Az*M_kalman;
@@ -119,7 +120,7 @@ L_kalman = Az*M_kalman;
 
 % Real part of last 10 poles: 5-10x real part of first 2 poles
 % NOTE: z = exp(s*Ts)
-ts = 5; zeta = 0.95; % we choose poles based on these criteria
+ts = 5; zeta = 0.9; % we choose poles based on these criteria
 
 omega_n = 4.6/(zeta*ts);
 real_part = -zeta*omega_n;
