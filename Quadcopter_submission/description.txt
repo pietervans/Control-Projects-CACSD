@@ -1,0 +1,17 @@
+Description of files
+--------------------
+
+The files from the zip file assigned to our group (group14_quadcopter.zip):
+- references14.mat
+- quadcopter_sfunction.p
+- icon_quad.png
+- generate_report.p
+
+Files we made:
+- main.m: all the code, this must be run in order to execute the Simulink diagrams
+- test_linearization.slx: Simulink diagram that verifies linearization is correct
+- quadcopter_lqr.slx: Simulink diagram of the standard LQR controller
+- quadcopter_lqr_integral.slx: Simulink diagram of the LQR controller with integral action
+- quadcopter_lqg.slx: Simulink diagram of the LQG controller
+- quadcopter_pp.slx: Simulink diagram of the controller using pole placement
+
