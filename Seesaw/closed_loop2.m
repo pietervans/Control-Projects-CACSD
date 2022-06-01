@@ -1,4 +1,4 @@
-main;
+    main;
 
 % output y equals measured quantities [x; theta]
 I4 = eye(4);

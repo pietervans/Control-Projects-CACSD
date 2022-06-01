@@ -119,19 +119,22 @@ L_kalman = Az*M_kalman;
 
 % Real part of last 10 poles: 5-10x real part of first 2 poles
 % NOTE: z = exp(s*Ts)
-ts = 7; zeta = 0.92; % we choose poles based on these criteria
-% ts = 7; zeta = 0.92; --> With these, checkpoints reached without crash!
+ts = 5; zeta = 0.95; % we choose poles based on these criteria
 
 omega_n = 4.6/(zeta*ts);
 real_part = -zeta*omega_n;
 imag_part = omega_n*sqrt(1-zeta^2);
 
-poles_cont = [real_part+[1j -1j]*imag_part  10*real_part*(ones(1,10))-(1:10)/10];
+poles_cont = [real_part+[1j -1j]*imag_part ...
+              1.2*(real_part+[1j -1j]*imag_part) ...
+              1.5*(real_part+[1j -1j]*imag_part) ...
+              8*real_part*(ones(1,6))-(1:6)/5];
+
 Kpp = place(Az, Bz, exp(poles_cont*Ts));
 
 % Estimator poles: 2-5x faster than controller poles
-Lpp = (place(Az', Cz', exp(5*poles_cont*Ts)))';
+Lpp = (place(Az', Cz', exp(2*poles_cont*Ts)))';
 
+% Verify compensator is stable
 A_comp_pp = Az - Bz*Kpp - Lpp*Cz + Lpp*Dz*Kpp;
 comp_poles_pp = eig(A_comp_pp);
-
